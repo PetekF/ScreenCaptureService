@@ -16,8 +16,6 @@ namespace Company.WebApplication1
             IHost host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    //services.AddDbContext<ScreenCaptureDbContext>(options => 
-                    //    options.UseSqlite(hostContext.Configuration.GetConnectionString("SQLite")));
                     services.AddHostedService<ScreenCapture>();
                 })
                 .Build();

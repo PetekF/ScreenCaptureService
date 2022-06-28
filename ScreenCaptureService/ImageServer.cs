@@ -29,7 +29,7 @@ namespace ScreenCaptureService
             _serverThread = new Thread(() => ServerHandler(listener, cancelToken));
             _serverThread.Start();
 
-            Console.WriteLine("TCP Server started. Listening on port 8888");
+            Console.WriteLine($"TCP Server started. Listening on port {port}");
         }
 
         public void Stop()
@@ -63,7 +63,18 @@ namespace ScreenCaptureService
 
                 NetworkStream stream = client.GetStream();
 
-                stream.Read(bytesFrom, 0, (int)client.ReceiveBufferSize);
+                try
+                {
+                    await stream.ReadAsync(bytesFrom, 0, (int)client.ReceiveBufferSize);
+
+                }
+                catch (IOException)
+                {
+                    Console.WriteLine("Connection to client lost.");
+                }
+                
+
+
                 dataFromClient = Encoding.UTF8.GetString(bytesFrom);
 
                 timerInterval = int.Parse(dataFromClient);
