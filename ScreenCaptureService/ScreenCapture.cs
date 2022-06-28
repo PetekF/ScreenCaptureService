@@ -17,6 +17,7 @@ namespace ScreenCaptureService
         private ScreenCaptureDbContext _dbCtx;
         private readonly int _screenWidth;
         private readonly int _screenHeight;
+        private readonly int _msInterval;
 
         private Timer? _timer = null;
         private ScreenCaptureLog? _scLog;
@@ -35,6 +36,7 @@ namespace ScreenCaptureService
             _screenWidth = _config.GetValue<int>("Resolution:Width");
             _screenHeight = _config.GetValue<int>("Resolution:Height");
 
+            _msInterval = _config.GetValue<int>("ScreenCaptureInterval:Miliseconds");
             _scLog = new ScreenCaptureLog();
 
             //_dbCtx.Database.EnsureDeleted();
@@ -51,8 +53,7 @@ namespace ScreenCaptureService
             _scLog.StartedAt = DateTime.Now;
             _dbCtx.ScreenCaptureLogs.Add(_scLog);
 
-            _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(5));
+            _timer = new Timer(DoWork, null, 0, _msInterval);
 
             return Task.CompletedTask;
         }
